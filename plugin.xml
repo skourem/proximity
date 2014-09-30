@@ -20,13 +20,15 @@
 
     <!-- android -->
     <platform name="android">
+        <source-file src="src/android/ProximityListener.java"  target-dir="src/gr/wizzup/proximity/"/>
+        
         <config-file target="res/xml/config.xml" parent="/*">
 	        <feature name="Proximity">
-	            <param name="android-package" value="gr.wizzup.proximity.ProximityListener" target-dir="src/gr/wizzup/proximity/"/>
+	            <param name="android-package" value="gr.wizzup.proximity.ProximityListener" />
 	        </feature>
 	    </config-file>
 
-	    <source-file src="src/android/ProximityListener.java"  />
+	    
     </platform>
 
 </plugin>
