@@ -28,7 +28,7 @@ var proximity = {
      */
     getProximityValue: function(successCallback,failureCallback) {
         argscheck.checkArgs('F', 'proximity.getProximityValue', arguments);
-        exec(successCallback, failureCallback, "Proximity", "getProximityState", []);
+        exec(successCallback, failureCallback, "Proximity", "getProximityValue", []);
     },
 
     /**
