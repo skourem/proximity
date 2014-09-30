@@ -15,7 +15,7 @@
     </engines>
 
     <js-module src="www/proximity.js" name="proximity">
-        <clobbers target="cordova.plugins.proximity" />
+        <clobbers target="navigator.proximity" />
     </js-module>
 
     <!-- android -->
