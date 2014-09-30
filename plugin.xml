@@ -10,6 +10,10 @@
     <license>Apache 2.0</license>
     <keywords>cordova,device,Proximity</keywords>
 
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+
     <js-module src="www/proximity.js" name="proximity">
         <clobbers target="navigator.proximity" />
     </js-module>
