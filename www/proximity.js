@@ -18,8 +18,8 @@
 //     module.exports = proximity;
 
 
-// var argscheck = require('cordova/argscheck'),
-// exec = require("cordova/exec");
+var argscheck = require('cordova/argscheck'),
+    exec = require("cordova/exec");
 
 var proximity = {
     /**
