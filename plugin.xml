@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="gr.wizzup.proximity"
+    version="0.0.1">
+
+    <name>Proximity</name>
+    <description>Proximity</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,device,Proximity</keywords>
+
+    <js-module src="www/proximity.js" name="proximity">
+        <clobbers target="navigator.proximity" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+	        <feature name="Proximity">
+	            <param name="android-package" value="org.apache.cordova.proximity.ProximityListener"/>
+	        </feature>
+	    </config-file>
+
+	    <source-file src="src/android/ProximityListener.java"  />
+    </platform>
+
+</plugin>
