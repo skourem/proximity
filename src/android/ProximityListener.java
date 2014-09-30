@@ -21,7 +21,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 /**
- * This class listens to the compass sensor and stores the latest heading value.
+ * This class listens to the proximity sensor and stores the latest proximityFlag value.
  */
 public class ProximityListener extends CordovaPlugin implements SensorEventListener {
 
@@ -33,13 +33,13 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     public long TIMEOUT = 30000;        // Timeout in msec to shut off listener
 
     int status;                         // status of listener
-    float heading;                      // most recent heading value
-    long timeStamp;                     // time of most recent value
-    long lastAccessTime;                // time the value was last retrieved
-    int accuracy;                       // accuracy of the sensor
+    int proximityFlag;                      // most recent proximityFlag value
+    //long timeStamp;                     // time of most recent value
+    //long lastAccessTime;                // time the value was last retrieved
+    //int accuracy;                       // accuracy of the sensor
 
     private SensorManager sensorManager;// Sensor manager
-    Sensor mSensor;                     // Compass sensor returned by sensor manager
+    Sensor mSensor;                     // proximity sensor returned by sensor manager
 
     private CallbackContext callbackContext;
 
@@ -47,8 +47,8 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
      * Constructor.
      */
     public ProximityListener() {
-        this.heading = 0;
-        this.timeStamp = 0;
+        this.proximityFlag = 0;
+        //this.timeStamp = 0;
         this.setStatus(ProximityListener.STOPPED);
     }
 
@@ -68,9 +68,9 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
      * Executes the request and returns PluginResult.
      *
      * @param action                The action to execute.
-     * @param args          	    JSONArry of arguments for the plugin.
+     * @param args                  JSONArry of arguments for the plugin.
      * @param callbackS=Context     The callback id used when calling back into JavaScript.
-     * @return              	    True if the action was valid.
+     * @return                      True if the action was valid.
      * @throws JSONException 
      */
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -84,7 +84,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
             int i = this.getStatus();
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, i));
         }
-        else if (action.equals("getHeading")) {
+        else if (action.equals("getProximityFlag")) {
             // If not running, then this is an async call, so don't worry about waiting
             if (this.status != ProximityListener.RUNNING) {
                 int r = this.start();
@@ -100,7 +100,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
                     }
                 }, 2000);
             }
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, getCompassHeading()));
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, getProximityFlag()));
         }
         else if (action.equals("setTimeout")) {
             this.setTimeout(args.getLong(0));
@@ -134,7 +134,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     //--------------------------------------------------------------------------
 
     /**
-     * Start listening for compass sensor.
+     * Start listening for proximity sensor.
      *
      * @return          status of listener
      */
@@ -145,15 +145,15 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
             return this.status;
         }
 
-        // Get compass sensor from sensor manager
+        // Get proximity sensor from sensor manager
         @SuppressWarnings("deprecation")
-        List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
 
         // If found, then register as listener
         if (list != null && list.size() > 0) {
             this.mSensor = list.get(0);
             this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            this.lastAccessTime = System.currentTimeMillis();
+            //this.lastAccessTime = System.currentTimeMillis();
             this.setStatus(ProximityListener.STARTING);
         }
 
@@ -166,7 +166,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     }
 
     /**
-     * Stop listening to compass sensor.
+     * Stop listening to proximity sensor.
      */
     public void stop() {
         if (this.status != ProximityListener.STOPPED) {
@@ -186,7 +186,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
         if (this.status == ProximityListener.STARTING) {
             this.setStatus(ProximityListener.ERROR_FAILED_TO_START);
             if (this.callbackContext != null) {
-                this.callbackContext.error("Compass listener failed to start.");
+                this.callbackContext.error("proximity listener failed to start.");
             }
         }
     }
@@ -199,21 +199,21 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     public void onSensorChanged(SensorEvent event) {
 
         // We only care about the orientation as far as it refers to Magnetic North
-        float heading = event.values[0];
+        int proximityFlag = (int) event.values[0];
 
-        // Save heading
-        this.timeStamp = System.currentTimeMillis();
-        this.heading = heading;
+        // Save proximityFlag
+        //this.timeStamp = System.currentTimeMillis();
+        this.proximityFlag = proximityFlag;
         this.setStatus(ProximityListener.RUNNING);
 
-        // If heading hasn't been read for TIMEOUT time, then turn off compass sensor to save power
-        if ((this.timeStamp - this.lastAccessTime) > this.TIMEOUT) {
-            this.stop();
-        }
+        // If proximityFlag hasn't been read for TIMEOUT time, then turn off proximity sensor to save power
+        //if ((this.timeStamp - this.lastAccessTime) > this.TIMEOUT) {
+          //  this.stop();
+        //}
     }
 
     /**
-     * Get status of compass sensor.
+     * Get status of proximity sensor.
      *
      * @return          status
      */
@@ -222,17 +222,17 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     }
 
     /**
-     * Get the most recent compass heading.
+     * Get the most recent proximity proximityFlag.
      *
-     * @return          heading
+     * @return          proximityFlag
      */
-    public float getHeading() {
-        this.lastAccessTime = System.currentTimeMillis();
-        return this.heading;
+    public float getProximityFlag() {
+        //this.lastAccessTime = System.currentTimeMillis();
+        return this.proximityFlag;
     }
 
     /**
-     * Set the timeout to turn off compass sensor if getHeading() hasn't been called.
+     * Set the timeout to turn off proximity sensor if getproximityFlag() hasn't been called.
      *
      * @param timeout       Timeout in msec.
      */
@@ -241,7 +241,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     }
 
     /**
-     * Get the timeout to turn off compass sensor if getHeading() hasn't been called.
+     * Get the timeout to turn off proximity sensor if getproximityFlag() hasn't been called.
      *
      * @return timeout in msec
      */
@@ -258,21 +258,21 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     }
 
     /**
-     * Create the CompassHeading JSON object to be returned to JavaScript
+     * Create the proximityproximityFlag JSON object to be returned to JavaScript
      *
-     * @return a compass heading
+     * @return a proximity proximityFlag
      */
-    private JSONObject getCompassHeading() throws JSONException {
-        JSONObject obj = new JSONObject();
-
-        obj.put("magneticHeading", this.getHeading());
-        obj.put("trueHeading", this.getHeading());
-        // Since the magnetic and true heading are always the same our and accuracy
-        // is defined as the difference between true and magnetic always return zero
-        obj.put("headingAccuracy", 0);
-        obj.put("timestamp", this.timeStamp);
-
-        return obj;
-    }
+//    private JSONObject getproximityFlag() throws JSONException {
+//        JSONObject obj = new JSONObject();
+//
+//        obj.put("magneticproximityFlag", this.getproximityFlag());
+//        //obj.put("trueproximityFlag", this.getproximityFlag());
+//        // Since the magnetic and true proximityFlag are always the same our and accuracy
+//        // is defined as the difference between true and magnetic always return zero
+//        //obj.put("proximityFlagAccuracy", 0);
+//        //obj.put("timestamp", this.timeStamp);
+//
+//        return obj;
+//    }
 
 }
