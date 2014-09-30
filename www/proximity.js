@@ -6,5 +6,13 @@ var exec = require('cordova/exec');
         exec(successCallback, failureCallback, 'Proximity', 'getProximityValue', []);
     };
     
+    proximity.prototype.enableSensor = function(successCallback, failureCallback) {
+        exec(null, null, 'Proximity', 'start', []);
+    };
+
+    proximity.prototype.disableSensor = function(successCallback, failureCallback) {
+        exec(null, null, 'Proximity', 'stop', []);
+    };
+
     var proximity = new proximity();
     module.exports = proximity;

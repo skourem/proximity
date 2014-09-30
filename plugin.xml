@@ -27,8 +27,20 @@
 	            <param name="android-package" value="gr.wizzup.proximity.ProximityListener" />
 	        </feature>
 	    </config-file>
+    </platform>
 
-	    
+    <!-- ios -->
+    <platform name="ios">
+        
+        <config-file target="config.xml" parent="/*">
+            <feature name="Proximity">
+                <param name="ios-package" value="CDVProximity"/>
+            </feature>
+        </config-file>
+            
+        <header-file src="src/ios/CDVProximity.h" />
+        <source-file src="src/ios/CDVProximity.m" />
+        
     </platform>
 
 </plugin>
