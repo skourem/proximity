@@ -21,7 +21,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 /**
- * This class listens to the proximity sensor and stores the latest proximityFlag value.
+ * This class listens to the proximity sensor and stores the latest proximity value.
  */
 public class ProximityListener extends CordovaPlugin implements SensorEventListener {
 
@@ -33,7 +33,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     public long TIMEOUT = 30000;        // Timeout in msec to shut off listener
 
     int status;                         // status of listener
-    int proximityFlag;                      // most recent proximityFlag value
+    int proximity;                      // most recent proximity value
     //long timeStamp;                     // time of most recent value
     //long lastAccessTime;                // time the value was last retrieved
     //int accuracy;                       // accuracy of the sensor
@@ -47,7 +47,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
      * Constructor.
      */
     public ProximityListener() {
-        this.proximityFlag = 0;
+        this.proximity = 0;
         //this.timeStamp = 0;
         this.setStatus(ProximityListener.STOPPED);
     }
@@ -84,7 +84,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
             int i = this.getStatus();
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, i));
         }
-        else if (action.equals("getProximityFlag")) {
+        else if (action.equals("getProximityValue")) {
             // If not running, then this is an async call, so don't worry about waiting
             if (this.status != ProximityListener.RUNNING) {
                 int r = this.start();
@@ -100,7 +100,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
                     }
                 }, 2000);
             }
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, getProximityFlag()));
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, getproximity()));
         }
         else if (action.equals("setTimeout")) {
             this.setTimeout(args.getLong(0));
@@ -199,14 +199,14 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     public void onSensorChanged(SensorEvent event) {
 
         // We only care about the orientation as far as it refers to Magnetic North
-        int proximityFlag = (int) event.values[0];
+        int proximity = (int) event.values[0];
 
-        // Save proximityFlag
+        // Save proximity
         //this.timeStamp = System.currentTimeMillis();
-        this.proximityFlag = proximityFlag;
+        this.proximity = proximity;
         this.setStatus(ProximityListener.RUNNING);
 
-        // If proximityFlag hasn't been read for TIMEOUT time, then turn off proximity sensor to save power
+        // If proximity hasn't been read for TIMEOUT time, then turn off proximity sensor to save power
         //if ((this.timeStamp - this.lastAccessTime) > this.TIMEOUT) {
           //  this.stop();
         //}
@@ -222,17 +222,17 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     }
 
     /**
-     * Get the most recent proximity proximityFlag.
+     * Get the most recent proximity proximity.
      *
-     * @return          proximityFlag
+     * @return          proximity
      */
-    public float getProximityFlag() {
+    public float getproximity() {
         //this.lastAccessTime = System.currentTimeMillis();
-        return this.proximityFlag;
+        return this.proximity;
     }
 
     /**
-     * Set the timeout to turn off proximity sensor if getproximityFlag() hasn't been called.
+     * Set the timeout to turn off proximity sensor if getproximity() hasn't been called.
      *
      * @param timeout       Timeout in msec.
      */
@@ -241,7 +241,7 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     }
 
     /**
-     * Get the timeout to turn off proximity sensor if getproximityFlag() hasn't been called.
+     * Get the timeout to turn off proximity sensor if getproximity() hasn't been called.
      *
      * @return timeout in msec
      */
@@ -258,18 +258,18 @@ public class ProximityListener extends CordovaPlugin implements SensorEventListe
     }
 
     /**
-     * Create the proximityproximityFlag JSON object to be returned to JavaScript
+     * Create the proximityproximity JSON object to be returned to JavaScript
      *
-     * @return a proximity proximityFlag
+     * @return a proximity proximity
      */
-//    private JSONObject getproximityFlag() throws JSONException {
+//    private JSONObject getproximity() throws JSONException {
 //        JSONObject obj = new JSONObject();
 //
-//        obj.put("magneticproximityFlag", this.getproximityFlag());
-//        //obj.put("trueproximityFlag", this.getproximityFlag());
-//        // Since the magnetic and true proximityFlag are always the same our and accuracy
+//        obj.put("magneticproximity", this.getproximity());
+//        //obj.put("trueproximity", this.getproximity());
+//        // Since the magnetic and true proximity are always the same our and accuracy
 //        // is defined as the difference between true and magnetic always return zero
-//        //obj.put("proximityFlagAccuracy", 0);
+//        //obj.put("proximityAccuracy", 0);
 //        //obj.put("timestamp", this.timeStamp);
 //
 //        return obj;

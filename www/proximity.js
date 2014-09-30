@@ -3,7 +3,7 @@ var exec = require('cordova/exec');
     var proximity = function() {};
 
     proximity.prototype.getProximity = function(successCallback, failureCallback) {
-        exec(successCallback, failureCallback, 'Proximity', 'getProximityFlag', []);
+        exec(successCallback, failureCallback, 'Proximity', 'getProximityValue', []);
     };
     
     var proximity = new proximity();
