@@ -18,7 +18,7 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
 	        <feature name="Proximity">
-	            <param name="android-package" value="org.apache.cordova.proximity.ProximityListener"/>
+	            <param name="android-package" value="gr.wizzup.proximity.ProximityListener" target-dir="src/gr/wizzup/proximity/"/>
 	        </feature>
 	    </config-file>
 
